@@ -15,22 +15,27 @@ namespace lab5_1
         public Form1()
         {
             InitializeComponent();
+            loadList();
+            updateGrid();
         }
 
         private void insertClick(object sender, EventArgs e)
         {
             insertMeas();
+            updateGrid();
 
         }
 
         private void deleteClick(object sender, EventArgs e)
         {
             deleteMeas(int.Parse(listBoxID.SelectedItem.ToString()));
+            updateGrid();
         }
 
         private void updateClick(object sender, EventArgs e)
         {
             updateMeas(int.Parse(listBoxID.SelectedItem.ToString()));
+            updateGrid();
         }
 
         private void measurementsDatabaseDataSetBindingSource_CurrentChanged(object sender, EventArgs e)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -134,8 +135,6 @@ namespace lab5_1
         {
             try
             {
-                if (valueTextBox.Text == "") throw new System.ArgumentException("Value text box cannot be empty", "original");
-
                 string connString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Dell\\source\\repos\\lab5_1\\lab5_1\\MeasurementsDatabase.mdf;Integrated Security=True";
 
                 using (SqlConnection conn = new SqlConnection())
@@ -435,6 +434,47 @@ namespace lab5_1
         }
 
         #endregion
+
+        private void updateGrid()
+        {
+            try
+            {
+                string connString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Dell\\source\\repos\\lab5_1\\lab5_1\\MeasurementsDatabase.mdf;Integrated Security=True";
+
+                using (SqlConnection conn = new SqlConnection())
+                {
+
+                    conn.ConnectionString = connString;
+
+                    SqlCommand sqlCmd = new SqlCommand("select * from measurements", conn);
+                    try
+                    {
+                        if (conn.State == ConnectionState.Closed)
+                            conn.Open();
+                        SqlDataAdapter sda = new SqlDataAdapter();
+                        sda.SelectCommand = sqlCmd;
+                        DataTable dbdataset = new DataTable();
+                        sda.Fill(dbdataset);
+                        BindingSource bSource = new BindingSource();
+                        bSource.DataSource = dbdataset;
+                        dataGridView1.DataSource = dbdataset;
+                        sda.Update(dbdataset);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error 2: Error during loading data to grid");
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
 
         private System.Windows.Forms.TextBox valueTextBox;
         private System.Windows.Forms.TextBox commentTextBox;
